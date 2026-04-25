@@ -1,16 +1,63 @@
-from pydantic import BaseModel
-from datetime import date
+from pydantic import BaseModel, EmailStr
+from datetime import date, datetime
 from decimal import Decimal
+from typing import Optional
 
-class TransactionCreate(BaseModel):
+
+class UsuarioCreate(BaseModel):
+    nome: str
+    email: EmailStr
+    senha: str
+
+
+class UsuarioResponse(BaseModel):
+    id: int
+    nome: str
+    email: EmailStr
+    criado_em: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    senha: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    usuario: UsuarioResponse
+
+
+class MovimentacaoCreate(BaseModel):
+    categoria_id: int
     tipo: str
     descricao: str
-    categoria: str
     valor: Decimal
-    data: date
+    data_movimentacao: date
+    forma_pagamento: Optional[str] = None
+    observacao: Optional[str] = None
 
-class TransactionResponse(TransactionCreate):
+
+class MovimentacaoResponse(MovimentacaoCreate):
     id: int
+    usuario_id: int
+    criado_em: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+class CategoriaCreate(BaseModel):
+    nome: str
+    tipo: str
+
+
+class CategoriaResponse(CategoriaCreate):
+    id: int
+    usuario_id: int
+    criado_em: Optional[datetime] = None
 
     class Config:
         from_attributes = True

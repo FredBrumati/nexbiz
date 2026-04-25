@@ -3,26 +3,51 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.database import get_db
-from app.models import Transaction
-from app.schemas import TransactionCreate, TransactionResponse
+from app.models import Movimentacao, Usuario
+from app.schemas import MovimentacaoCreate, MovimentacaoResponse
+from app.security import get_usuario_logado
 
-router = APIRouter(prefix="/transactions", tags=["Transactions"])
+router = APIRouter(prefix="/movimentacoes", tags=["Movimentações"])
 
-@router.post("/", response_model=TransactionResponse)
-def create_transaction(transaction: TransactionCreate, db: Session = Depends(get_db)):
-    if transaction.tipo not in ["receita", "despesa"]:
+
+@router.post("/", response_model=MovimentacaoResponse)
+def create_movimentacao(
+    movimentacao: MovimentacaoCreate,
+    db: Session = Depends(get_db),
+    usuario_logado: Usuario = Depends(get_usuario_logado)
+):
+    if movimentacao.tipo not in ["receita", "despesa"]:
         raise HTTPException(
             status_code=400,
             detail="Tipo inválido. Use 'receita' ou 'despesa'."
         )
 
-    new_transaction = Transaction(**transaction.model_dump())
-    db.add(new_transaction)
+    nova_movimentacao = Movimentacao(
+        usuario_id=usuario_logado.id,
+        categoria_id=movimentacao.categoria_id,
+        tipo=movimentacao.tipo,
+        descricao=movimentacao.descricao,
+        valor=movimentacao.valor,
+        data_movimentacao=movimentacao.data_movimentacao,
+        forma_pagamento=movimentacao.forma_pagamento,
+        observacao=movimentacao.observacao,
+    )
+
+    db.add(nova_movimentacao)
     db.commit()
-    db.refresh(new_transaction)
+    db.refresh(nova_movimentacao)
 
-    return new_transaction
+    return nova_movimentacao
 
-@router.get("/", response_model=List[TransactionResponse])
-def list_transactions(db: Session = Depends(get_db)):
-    return db.query(Transaction).order_by(Transaction.data.desc()).all()
+
+@router.get("/", response_model=List[MovimentacaoResponse])
+def list_movimentacoes(
+    db: Session = Depends(get_db),
+    usuario_logado: Usuario = Depends(get_usuario_logado)
+):
+    return (
+        db.query(Movimentacao)
+        .filter(Movimentacao.usuario_id == usuario_logado.id)
+        .order_by(Movimentacao.data_movimentacao.desc())
+        .all()
+    )

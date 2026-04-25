@@ -1,69 +1,77 @@
-import React from "react";
-import { FiHome, FiTrendingUp, FiTrendingDown, FiPieChart, FiActivity } from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import { FiArrowUpRight, FiArrowDownRight, FiDollarSign } from "react-icons/fi";
 import { motion } from "framer-motion";
+import api from "../services/api";
 
-const sidebarItems = [
-  { icon: FiHome, label: "Dashboard", active: true },
-  { icon: FiTrendingUp, label: "Receitas" },
-  { icon: FiTrendingDown, label: "Despesas" },
-  { icon: FiPieChart, label: "Relatórios" },
-  { icon: FiActivity, label: "Insights IA" },
-];
+export default function DashboardCards() {
+  const [summary, setSummary] = useState({
+    receitas: 0,
+    despesas: 0,
+    saldo: 0,
+  });
 
-export default function Sidebar() {
+  useEffect(() => {
+    api.get("/dashboard/summary")
+      .then((response) => setSummary(response.data))
+      .catch((error) => console.error("Erro ao buscar resumo:", error));
+  }, []);
+
+  const cards = [
+    {
+      title: "Receita do mês",
+      value: `R$ ${summary.receitas.toFixed(2)}`,
+      icon: FiArrowUpRight,
+      border: "border-emerald-400/30",
+      iconBg: "bg-emerald-400/15",
+      iconColor: "text-emerald-300",
+    },
+    {
+      title: "Despesas do mês",
+      value: `R$ ${summary.despesas.toFixed(2)}`,
+      icon: FiArrowDownRight,
+      border: "border-rose-400/30",
+      iconBg: "bg-rose-400/15",
+      iconColor: "text-rose-300",
+    },
+    {
+      title: "Saldo atual",
+      value: `R$ ${summary.saldo.toFixed(2)}`,
+      icon: FiDollarSign,
+      border: "border-cyan-400/30",
+      iconBg: "bg-cyan-400/15",
+      iconColor: "text-cyan-300",
+    },
+  ];
+
   return (
-    <motion.aside
-      initial={{ x: -40, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="hidden w-72 border-r border-white/10 bg-white/5 px-5 py-6 backdrop-blur-2xl lg:block"
-    >
-      <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 text-xl font-black text-slate-950 shadow-[0_0_25px_rgba(59,130,246,0.45)]">
-          N
-        </div>
-        <div>
-          <h1 className="text-xl font-bold">NexBiz</h1>
-          <p className="text-sm text-slate-400">Controle inteligente</p>
-        </div>
-      </div>
+    <section className="mt-6 grid gap-4 xl:grid-cols-3">
+      {cards.map((card, index) => {
+        const Icon = card.icon;
 
-      <nav className="mt-10 space-y-2">
-        {sidebarItems.map((item, index) => {
-          const Icon = item.icon;
-          return (
-            <motion.button
-              key={item.label}
-              initial={{ opacity: 0, x: -15 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.08 * index }}
-              className={`group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all ${
-                item.active
-                  ? "bg-gradient-to-r from-cyan-400/20 to-violet-500/20 text-white shadow-[0_0_30px_rgba(139,92,246,0.18)]"
-                  : "text-slate-300 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <Icon className="text-lg" />
-              <span className="font-medium">{item.label}</span>
-            </motion.button>
-          );
-        })}
-      </nav>
+        return (
+          <motion.div
+            key={card.title}
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: index * 0.08 }}
+            whileHover={{ y: -6, scale: 1.01 }}
+            className={`rounded-3xl border ${card.border} bg-white/10 p-5 backdrop-blur-xl`}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-slate-300">{card.title}</p>
+                <h3 className="mt-3 text-2xl font-bold text-white md:text-3xl">
+                  {card.value}
+                </h3>
+              </div>
 
-      <div className="mt-10 rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-cyan-500/10 to-violet-500/10 p-5">
-        <div className="flex items-center gap-3">
-          <div className="rounded-2xl bg-cyan-400/15 p-3">
-            <FiActivity className="text-xl text-cyan-300" />
-          </div>
-          <div>
-            <h3 className="font-semibold">IA Financeira</h3>
-            <p className="text-sm text-slate-300">Insights automáticos</p>
-          </div>
-        </div>
-        <p className="mt-4 text-sm leading-6 text-slate-300">
-          Detecte padrões, acompanhe tendências e receba alertas inteligentes sobre o caixa.
-        </p>
-      </div>
-    </motion.aside>
+              <div className={`rounded-2xl ${card.iconBg} p-3`}>
+                <Icon className={`text-2xl ${card.iconColor}`} />
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </section>
   );
 }
