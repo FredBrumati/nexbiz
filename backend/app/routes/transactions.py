@@ -51,3 +51,22 @@ def list_movimentacoes(
         .order_by(Movimentacao.data_movimentacao.desc())
         .all()
     )
+
+@router.delete("/{id}")
+def delete_movimentacao(
+    id: int,
+    db: Session = Depends(get_db),
+    usuario_logado: Usuario = Depends(get_usuario_logado)
+):
+    mov = db.query(Movimentacao).filter(
+        Movimentacao.id == id,
+        Movimentacao.usuario_id == usuario_logado.id
+    ).first()
+
+    if not mov:
+        raise HTTPException(status_code=404, detail="Movimentação não encontrada")
+
+    db.delete(mov)
+    db.commit()
+
+    return {"message": "Deletado com sucesso"}
