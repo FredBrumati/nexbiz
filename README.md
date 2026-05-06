@@ -40,12 +40,3 @@ npm start
 
 (Coloca prints aqui depois)
 
-## 📈 Futuras melhorias
-
-* Login de usuário
-* Dashboard com gráficos
-* Versão mobile
-
----
-
-Projeto desenvolvido para fins acadêmicos e portfólio.
