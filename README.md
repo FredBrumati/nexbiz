@@ -767,12 +767,11 @@ O sistema não deve solicitar senhas, tokens ou dados sensíveis no chat.
 
 Projeto desenvolvido pelos alunos:
 
-**Gustavo Vasconcelos**
-**Felipe Piovesan**
-**Frederico Brumati**
-**Ruan Gimenes**
-**Vitor Zuchieri**
-
+- **Gustavo Vasconcelos**
+- **Felipe Piovesan**
+- **Frederico Brumati**
+- **Ruan Gimenes**
+- **Vitor Zuchieri**
 Área de interesse:
 
 - Desenvolvimento web;
