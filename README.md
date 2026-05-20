@@ -772,6 +772,7 @@ Projeto desenvolvido pelos alunos:
 - **Frederico Brumati**
 - **Ruan Gimenes**
 - **Vitor Zuchieri**
+
 Área de interesse:
 
 - Desenvolvimento web;
