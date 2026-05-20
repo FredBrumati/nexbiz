@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Date, Numeric, ForeignKey, Text, DateTime
 from sqlalchemy.sql import func
+
 from app.database import Base
 
 
@@ -13,6 +14,16 @@ class Usuario(Base):
     criado_em = Column(DateTime, server_default=func.now())
 
 
+class Categoria(Base):
+    __tablename__ = "categorias"
+
+    id = Column(Integer, primary_key=True, index=True)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    nome = Column(String(100), nullable=False)
+    tipo = Column(String(20), nullable=False)
+    criado_em = Column(DateTime, server_default=func.now())
+
+
 class Movimentacao(Base):
     __tablename__ = "movimentacoes"
 
@@ -21,17 +32,8 @@ class Movimentacao(Base):
     categoria_id = Column(Integer, ForeignKey("categorias.id"), nullable=False)
     tipo = Column(String(20), nullable=False)
     descricao = Column(String(255), nullable=False)
-    valor = Column(Numeric(10, 2), nullable=False)
+    valor = Column(Numeric(12, 2), nullable=False)
     data_movimentacao = Column(Date, nullable=False)
     forma_pagamento = Column(String(50), nullable=True)
     observacao = Column(Text, nullable=True)
-    criado_em = Column(DateTime, server_default=func.now())
-
-class Categoria(Base):
-    __tablename__ = "categorias"
-
-    id = Column(Integer, primary_key=True, index=True)
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
-    nome = Column(String(100), nullable=False)
-    tipo = Column(String(20), nullable=False)
     criado_em = Column(DateTime, server_default=func.now())
