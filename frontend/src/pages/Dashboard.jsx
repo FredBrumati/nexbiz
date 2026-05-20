@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import DashboardCards from "../components/DashboardCards";
@@ -8,6 +8,16 @@ import TransactionsList from "../components/TransactionsList";
 import ExperiencePanel from "../components/ExperiencePanel";
 
 export default function Dashboard() {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefreshKey((prev) => prev + 1);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen overflow-hidden bg-slate-950 text-white">
       <div className="pointer-events-none absolute inset-0">
@@ -22,15 +32,16 @@ export default function Dashboard() {
 
         <main className="flex-1 px-4 py-4 md:px-6 md:py-6 lg:px-8">
           <Header />
-          <DashboardCards />
+
+          <DashboardCards key={`cards-${refreshKey}`} />
 
           <section className="mt-6 grid gap-6 xl:grid-cols-[1.6fr_0.9fr]">
-            <CashflowChart />
-            <InsightsPanel />
+            <CashflowChart key={`chart-${refreshKey}`} />
+            <InsightsPanel key={`ia-${refreshKey}`} />
           </section>
 
           <section className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-            <TransactionsList />
+            <TransactionsList key={`transactions-${refreshKey}`} />
             <ExperiencePanel />
           </section>
         </main>

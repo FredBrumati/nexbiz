@@ -5,6 +5,7 @@ import {
   FiPieChart,
   FiActivity,
   FiLogOut,
+  FiTag,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -12,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const sidebarItems = [
   { icon: FiHome, label: "Dashboard", path: "/dashboard" },
   { icon: FiRepeat, label: "Movimentações", path: "/movimentacoes" },
+  { icon: FiTag, label: "Categorias", path: "/categorias" },
   { icon: FiPieChart, label: "Relatórios", path: "/relatorios" },
   { icon: FiActivity, label: "Insights IA", path: "/insights" },
 ];
@@ -57,7 +59,7 @@ export default function Sidebar() {
               transition={{ delay: 0.08 * index }}
               className={`group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all ${
                 active
-                  ? "bg-gradient-to-r from-cyan-400/20 to-violet-500/20 text-white shadow-[0_0_30px_rgba(139,92,246,0.18)]"
+                  ? "bg-gradient-to-r from-cyan-400/20 to-violet-500/20 text-white"
                   : "text-slate-300 hover:bg-white/10 hover:text-white"
               }`}
             >
@@ -69,17 +71,9 @@ export default function Sidebar() {
       </nav>
 
       <div className="mt-10 rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-cyan-500/10 to-violet-500/10 p-5">
-        <div className="flex items-center gap-3">
-          <div className="rounded-2xl bg-cyan-400/15 p-3">
-            <FiActivity className="text-xl text-cyan-300" />
-          </div>
-          <div>
-            <h3 className="font-semibold">IA Financeira</h3>
-            <p className="text-sm text-slate-300">Insights automáticos</p>
-          </div>
-        </div>
-        <p className="mt-4 text-sm leading-6 text-slate-300">
-          Detecte padrões, acompanhe tendências e receba alertas inteligentes sobre o caixa.
+        <h3 className="font-semibold">IA Financeira</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-300">
+          Insights automáticos para apoiar decisões financeiras.
         </p>
       </div>
 
