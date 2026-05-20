@@ -5,6 +5,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Movimentacoes from "./pages/Movimentacoes";
+import Categorias from "./pages/Categorias";
+import Relatorios from "./pages/Relatorios";
+import Insights from "./pages/Insights";
+import FloatingGroqChat from "./components/FloatingGroqChat";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem("nexbiz_token");
@@ -13,7 +17,12 @@ function PrivateRoute({ children }) {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  return (
+    <>
+      {children}
+      <FloatingGroqChat />
+    </>
+  );
 }
 
 export default function App() {
@@ -37,6 +46,33 @@ export default function App() {
           element={
             <PrivateRoute>
               <Movimentacoes />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/categorias"
+          element={
+            <PrivateRoute>
+              <Categorias />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/relatorios"
+          element={
+            <PrivateRoute>
+              <Relatorios />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/insights"
+          element={
+            <PrivateRoute>
+              <Insights />
             </PrivateRoute>
           }
         />
